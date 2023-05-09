@@ -1,8 +1,8 @@
 ![](../media/solutions-microsoft-logo-small.png)
 
 # ARC SQL enable Azure Dashboard
-This code will demonstrates how to deploy the [SQL Server Instances.json] to Azure portal Dashboards (#https://learn.microsoft.com/en-us/azure/azure-portal/azure-portal-dashboards).
-(./Dashboard.png)
+This code will demonstrates how to deploy the [SQL Server Instances.json] to ![Azure portal](#https://learn.microsoft.com/en-us/azure/azure-portal/azure-portal-dashboards) Dashboards.
+![](./Dashboard.png)
 ### How to Deploy
 
 1. Sign in to **[Azure Portal](#https://portal.azure.com/)**
