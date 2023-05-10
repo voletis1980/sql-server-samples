@@ -1,13 +1,13 @@
 ![](../media/solutions-microsoft-logo-small.png)
 
 # ARC SQL enable Azure Dashboard
-This article will demonstrates how to deploy the [SQL Server Instances.json](SQL%20Server%20Instances.json) to [Azure portal](#https://learn.microsoft.com/en-us/azure/azure-portal/azure-portal-dashboards) Dashboards.
+This article will demonstrates how to deploy the [SQL Server Instances.json](SQL%20Server%20Instances.json) to [Azure portal](https://learn.microsoft.com/en-us/azure/azure-portal/azure-portal-dashboards) Dashboards.
 
 ![](./img/Dashboard.png)
 
 ### How to Deploy
 
-1. Sign in to **[Azure Portal](#https://portal.azure.com/)**
+1. Sign in to [Azure Portal](https://portal.azure.com/)
 2. From the Azure Portal menu, select **Dashboard**. Your default view might already be set to dashboard.
    ![](https://learn.microsoft.com/en-us/azure/azure-portal/media/azure-portal-dashboards/portal-menu-dashboard.png)
 3. Select **Upload**.
