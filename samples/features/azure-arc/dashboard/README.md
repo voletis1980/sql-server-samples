@@ -1,18 +1,18 @@
 ![](../media/solutions-microsoft-logo-small.png)
 
-# ARC SQL enable Azure Dashboard
-This article will demonstrates how to deploy the [SQL Server Instances.json](SQL%20Server%20Instances.json) to [Azure portal](https://learn.microsoft.com/en-us/azure/azure-portal/azure-portal-dashboards) Dashboards.
+# How to Enable Azure Dashboard for ARC SQL
+This article will show you how to use the [SQL Server Instances.json](SQL%20Server%20Instances.json) file to create a custom dashboard in the [Azure portal](https://learn.microsoft.com/en-us/azure/azure-portal/azure-portal-dashboards).
 
 ![](./img/Dashboard.png)
 
-### How to Deploy
+### Steps to Follow
 
-1. Sign in to [Azure Portal](https://portal.azure.com/)
-2. From the Azure Portal menu, select **Dashboard**. Your default view might already be set to dashboard.
-   ![](https://learn.microsoft.com/en-us/azure/azure-portal/media/azure-portal-dashboards/portal-menu-dashboard.png)
-3. Select **Upload**.
-   ![](https://learn.microsoft.com/en-us/azure/azure-portal/media/azure-portal-dashboards/create-new-dashboard.png)
-5. If you need to Edit the Dashboard, please folow the [link](https://learn.microsoft.com/en-us/azure/azure-portal/azure-portal-dashboards#edit-a-dashboard)
+1. Log in to [Azure Portal](https://portal.azure.com/)
+2. Click on **Dashboard** from the Azure Portal menu. You may already see the dashboard view by default.
+![](https://learn.microsoft.com/en-us/azure/azure-portal/media/azure-portal-dashboards/portal-menu-dashboard.png)
+3. Choose **Upload**.
+![](https://learn.microsoft.com/en-us/azure/azure-portal/media/azure-portal-dashboards/create-new-dashboard.png)
+4. If you want to edit the dashboard, please refer to this [link](https://learn.microsoft.com/en-us/azure/azure-portal/azure-portal-dashboards#edit-a-dashboard).
 
 <a name=disclaimers></a>
 
