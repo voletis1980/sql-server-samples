@@ -60,7 +60,7 @@
             "position": {
               "x": 3,
               "y": 0,
-              "colSpan": 7,
+              "colSpan": 6,
               "rowSpan": 5
             },
             "metadata": {
@@ -111,7 +111,7 @@
           },
           "2": {
             "position": {
-              "x": 10,
+              "x": 9,
               "y": 0,
               "colSpan": 3,
               "rowSpan": 5
@@ -163,7 +163,7 @@
           },
           "3": {
             "position": {
-              "x": 13,
+              "x": 12,
               "y": 0,
               "colSpan": 7,
               "rowSpan": 5
@@ -218,7 +218,7 @@
             "position": {
               "x": 0,
               "y": 5,
-              "colSpan": 20,
+              "colSpan": 19,
               "rowSpan": 4
             },
             "metadata": {
@@ -323,7 +323,7 @@
             "position": {
               "x": 6,
               "y": 9,
-              "colSpan": 8,
+              "colSpan": 7,
               "rowSpan": 6
             },
             "metadata": {
@@ -374,7 +374,7 @@
           },
           "7": {
             "position": {
-              "x": 14,
+              "x": 13,
               "y": 9,
               "colSpan": 6,
               "rowSpan": 6
@@ -535,7 +535,7 @@
             "position": {
               "x": 12,
               "y": 15,
-              "colSpan": 8,
+              "colSpan": 7,
               "rowSpan": 6
             },
             "metadata": {
@@ -580,6 +580,112 @@
               "settings": {},
               "partHeader": {
                 "title": "SQL Server Versions",
+                "subtitle": ""
+              }
+            }
+          },
+          "11": {
+            "position": {
+              "x": 0,
+              "y": 21,
+              "colSpan": 6,
+              "rowSpan": 5
+            },
+            "metadata": {
+              "inputs": [
+                {
+                  "name": "isShared",
+                  "isOptional": true
+                },
+                {
+                  "name": "queryId",
+                  "isOptional": true
+                },
+                {
+                  "name": "formatResults",
+                  "isOptional": true
+                },
+                {
+                  "name": "partTitle",
+                  "value": "Query 1",
+                  "isOptional": true
+                },
+                {
+                  "name": "query",
+                  "value": "resources\n| where type == \"microsoft.azurearcdata/sqlserverinstances/databases\"\n| where name != \"tempdb\"\n| extend prop_db=parse_xml(properties) \n| extend prop_db_recoveryMode = prop_db.recoveryMode\n| extend prop_db_databaseCreationDate = todatetime(prop_db.databaseCreationDate)\n| extend prop_db_backupInformation = prop_db.backupInformation\n| extend prop_db_backupInformation_lastFullBackup = todatetime(prop_db.backupInformation.lastFullBackup)\n| extend calc_lastBackupAgeDays = iff(isnull(prop_db_backupInformation_lastFullBackup),\n                                        datetime_diff('Day',now(),prop_db_databaseCreationDate),\n                                        datetime_diff('Day',now(),prop_db_backupInformation_lastFullBackup)\n                                    )\n| extend Backup_1day = iif( calc_lastBackupAgeDays <=1 , 1 , 0)\n| extend Backup_7day = iif( calc_lastBackupAgeDays >1  and calc_lastBackupAgeDays <=7 , 1 , 0)\n| extend Backup_over7day = iif( calc_lastBackupAgeDays >7 , 1 , 0)\n| extend Backup_desc = case(\n                            isnull(prop_db_backupInformation_lastFullBackup), \"no backups at all\", \n                            datetime_diff('Day',now(),prop_db_backupInformation_lastFullBackup) <= 1, \"1 day\", \n                            datetime_diff('Day',now(),prop_db_backupInformation_lastFullBackup) <= 7, \"7 days\", \n                            datetime_diff('Day',now(),prop_db_backupInformation_lastFullBackup) <= 30, \"1 Month\", \n                            \"older than a month\")\n| project database_name = name, RecoveryModel = prop_db_recoveryMode, Last_Full_Backup = prop_db_backupInformation_lastFullBackup , Backup_Age_Days = calc_lastBackupAgeDays  ,Backup_1day  ,Backup_7day  ,Backup_over7day, Backup_desc\n| summarize Count=count() by Backup_desc",
+                  "isOptional": true
+                },
+                {
+                  "name": "queryScope",
+                  "value": {
+                    "scope": 0,
+                    "values": []
+                  },
+                  "isOptional": true
+                },
+                {
+                  "name": "chartType",
+                  "value": 2,
+                  "isOptional": true
+                }
+              ],
+              "type": "Extension/HubsExtension/PartType/ArgQueryChartTile",
+              "settings": {},
+              "partHeader": {
+                "title": "SQL Server Backups Intervals",
+                "subtitle": ""
+              }
+            }
+          },
+          "12": {
+            "position": {
+              "x": 6,
+              "y": 21,
+              "colSpan": 6,
+              "rowSpan": 5
+            },
+            "metadata": {
+              "inputs": [
+                {
+                  "name": "isShared",
+                  "isOptional": true
+                },
+                {
+                  "name": "queryId",
+                  "isOptional": true
+                },
+                {
+                  "name": "formatResults",
+                  "isOptional": true
+                },
+                {
+                  "name": "partTitle",
+                  "value": "Query 1",
+                  "isOptional": true
+                },
+                {
+                  "name": "query",
+                  "value": "resources\n| where type == \"microsoft.azurearcdata/sqlserverinstances/databases\"\n| where name != \"tempdb\"\n| where name != \"model\"\n| where name != \"master\"\n| where name != \"msdb\"\n| extend prop_db=parse_xml(properties) \n| extend Recovery_Model = prop_db.recoveryMode\n| summarize Count = count() by tostring(Recovery_Model)",
+                  "isOptional": true
+                },
+                {
+                  "name": "chartType",
+                  "value": 2,
+                  "isOptional": true
+                },
+                {
+                  "name": "queryScope",
+                  "value": {
+                    "scope": 0,
+                    "values": []
+                  },
+                  "isOptional": true
+                }
+              ],
+              "type": "Extension/HubsExtension/PartType/ArgQueryChartTile",
+              "settings": {},
+              "partHeader": {
+                "title": "SQL Server Recovery Mode",
                 "subtitle": ""
               }
             }
