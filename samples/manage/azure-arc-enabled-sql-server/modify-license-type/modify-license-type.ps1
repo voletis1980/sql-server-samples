@@ -13,7 +13,7 @@
 # -ResourceGroup [resource_goup]                (Limit scope  to a specific resoure group)
 # -MachineName [machine_name]                   (Limit scope to a specific machine)
 # -LicenseType [license_type_value]             (Specific LT value)
-# -All                                          (Required. Set the new license type on all installed extensions.
+# -Force                                        (Required. Set the new license type on all installed extensions.
 #                                               By default the value is set only if license type is undefined undefined)
 #
 # The script uses a function ConvertTo-HashTable that was created by Adam Bertram (@adam-bertram).
@@ -32,7 +32,7 @@ param (
     [ValidateSet("PAYG","Paid","LicenseOnly", IgnoreCase=$false)]
     [string] $LicenseType,
     [Parameter (Mandatory= $false)]
-    [boolean] $All=$false
+    [boolean] $Force=$false
 )
 
 function CheckModule ($m) {
@@ -117,12 +117,14 @@ $requiredModules | Foreach-Object {CheckModule $_}
 
 # Subscriptions to scan
 
+$tenantID = (Get-AzureADTenantDetail).ObjectId
+
 if ($SubId -like "*.csv") {
     $subscriptions = Import-Csv $SubId
 }elseif($SubId -ne ""){
-    $subscriptions = [PSCustomObject]@{SubscriptionId = $SubId} | Get-AzSubscription 
+    $subscriptions = [PSCustomObject]@{SubscriptionId = $SubId} | Get-AzSubscription -TenantID $tenantID
 }else{
-    $subscriptions = Get-AzSubscription
+    $subscriptions = Get-AzSubscription -TenantID $tenantID
 }
 
 
@@ -135,7 +137,7 @@ foreach ($sub in $subscriptions){
     if ($sub.State -ne "Enabled") {continue}
 
     try {
-        Set-AzContext -SubscriptionId $sub.Id
+        Set-AzContext -SubscriptionId $sub.Id -Tenant $tenantID
     }catch {
         write-host "Invalid subscription: $($sub.Id)"
         {continue}
@@ -180,7 +182,7 @@ foreach ($sub in $subscriptions){
         $settings = $r.properties.settings | ConvertTo-Json | ConvertFrom-Json | ConvertTo-Hashtable
 
         if ($settings.ContainsKey("LicenseType")) {
-            if ($All) {
+            if ($Force) {
                 if ($settings["LicenseType"] -ne $LicenseType ) {
                     $settings["LicenseType"] = $LicenseType
                     Write-Host "Resource group: [$($r.resourceGroup)] Connected machine: [$($r.MachineName)] : License type: [$($settings["LicenseType"])]"
