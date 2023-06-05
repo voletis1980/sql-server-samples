@@ -84,7 +84,7 @@ This option is recommended because Cloud shell has the Azure PowerShell modules 
 1. Run the script.  
 
     ```console
-   .//modify-license-type.ps1 -LicenseType Paid
+   ./modify-license-type.ps1 -LicenseType Paid
     ```
 
 > [!NOTE]
@@ -125,5 +125,5 @@ Use the following steps to run the script in a PowerShell session on your PC.
 1. Run the script using the desired scope.
 
     ```console
-   .//modify-license-type.ps1 -LicenseType Paid
+   .\modify-license-type.ps1 -LicenseType Paid
     ```
