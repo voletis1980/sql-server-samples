@@ -52,7 +52,7 @@ The following command will scan all the subscriptions to which the user has acce
 The following command will scan the subscription `<sub_id>` and set the license type value to "Paid" on all servers.
 
 ```PowerShell
-.\modify-license-type.ps1 -SubId <sub_id> -LicenseType Paid -All $True
+.\modify-license-type.ps1 -SubId <sub_id> -LicenseType Paid -Force $True
 ```
 
 ## Example 3
@@ -60,7 +60,7 @@ The following command will scan the subscription `<sub_id>` and set the license 
 The following command will scan resource group <resource_group_name> in the subscription `<sub_id>` and set the license type value to "PAYG" on all servers.
 
 ```PowerShell
-.\modify-license-type.ps1 -SubId <sub_id> -ResourceGroup <resource_group_name> -LicenseType PAYG -All $True
+.\modify-license-type.ps1 -SubId <sub_id> -ResourceGroup <resource_group_name> -LicenseType PAYG -Force $True
 ```
 
 # Running the script using Cloud Shell
