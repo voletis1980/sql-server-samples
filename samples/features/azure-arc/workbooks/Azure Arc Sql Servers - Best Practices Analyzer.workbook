@@ -1,0 +1,356 @@
+{
+  "version": "Notebook/1.0",
+  "items": [
+    {
+      "type": 1,
+      "content": {
+        "json": "# Azure Arc SQL Servers - Best Practices Analyzer"
+      },
+      "name": "text - 2"
+    },
+    {
+      "type": 9,
+      "content": {
+        "version": "KqlParameterItem/1.0",
+        "crossComponentResources": [
+          "{Subscription}"
+        ],
+        "parameters": [
+          {
+            "id": "5ccbaa77-2a42-4a07-a877-b5a3a6297703",
+            "version": "KqlParameterItem/1.0",
+            "name": "Subscription",
+            "type": 6,
+            "isRequired": true,
+            "multiSelect": true,
+            "quote": "'",
+            "delimiter": ",",
+            "typeSettings": {
+              "additionalResourceOptions": [
+                "value::all"
+              ],
+              "includeAll": true,
+              "showDefault": false
+            },
+            "timeContext": {
+              "durationMs": 86400000
+            },
+            "value": [
+              "value::all"
+            ]
+          },
+          {
+            "id": "f932fba5-395b-423d-a9b0-538714e1e553",
+            "version": "KqlParameterItem/1.0",
+            "name": "LogAnalitycsWorkpace",
+            "type": 5,
+            "query": "where type =~ 'microsoft.operationalinsights/workspaces'\r\n| project id",
+            "crossComponentResources": [
+              "{Subscription}"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": []
+            },
+            "queryType": 1,
+            "resourceType": "microsoft.resourcegraph/resources",
+            "value": "/subscriptions/71ac1fd6-9ebc-4a20-9667-b873f7cee091/resourceGroups/Arc-Demo/providers/Microsoft.OperationalInsights/workspaces/LA-AzureArc"
+          }
+        ],
+        "style": "pills",
+        "queryType": 1,
+        "resourceType": "microsoft.resourcegraph/resources"
+      },
+      "name": "parameters - 7"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "SqlAssessment_CL\r\n| extend asmt = parse_csv(RawData)\r\n| extend\r\n    AsmtId=tostring(asmt[1]),\r\n    CheckId=tostring(asmt[2]),\r\n    DisplayString=asmt[3],\r\n    Description=tostring(asmt[4]),\r\n    HelpLink=asmt[5],\r\n    TargetType=case(asmt[6] == 1, \"Server\", asmt[6] == 2, \"Database\", \"\"),\r\n    TargetName=tostring(asmt[7]), \r\n    Severity=case(asmt[8] == 30, \"High\", asmt[8] == 20, \"Medium\", asmt[8] == 10, \"Low\", asmt[8] == 0, \"Information\", asmt[8] == 1, \"Warning\", asmt[8] == 2, \"Critical\", \"Passed\"),\r\n    Message=tostring(asmt[9]),\r\n    TagsArr=split(tostring(asmt[10]), \",\"),\r\n    Sev = toint(asmt[8])\r\n    | order by CheckId, _ResourceId\r\n    | join kind=inner\r\n    (\r\n    SqlAssessment_CL\r\n    | extend asmt = parse_csv(RawData)\r\n    | extend\r\n        AsmtId=tostring(asmt[1])   \r\n    | summarize arg_max(TimeGenerated, *) by _ResourceId\r\n    | project AsmtId\r\n    ) on AsmtId\r\n    |where Sev >= 0\r\n    | summarize count() by Severity, Sev\r\n    | order by Sev",
+        "size": 3,
+        "title": "Issues by severity",
+        "exportFieldName": "Severity",
+        "exportParameterName": "severity",
+        "showExportToExcel": true,
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "crossComponentResources": [
+          "{LogAnalitycsWorkpace}"
+        ],
+        "visualization": "table",
+        "gridSettings": {
+          "formatters": [
+            {
+              "columnMatch": "Severity",
+              "formatter": 8,
+              "formatOptions": {
+                "min": 0,
+                "max": 40,
+                "palette": "coldHot"
+              }
+            },
+            {
+              "columnMatch": "Sev",
+              "formatter": 8,
+              "formatOptions": {
+                "min": 0,
+                "max": 40,
+                "palette": "coldHot"
+              }
+            }
+          ]
+        },
+        "chartSettings": {
+          "seriesLabelSettings": [
+            {
+              "seriesName": "Medium",
+              "color": "orange"
+            },
+            {
+              "seriesName": "Low",
+              "color": "blue"
+            },
+            {
+              "seriesName": "High",
+              "color": "redBright"
+            },
+            {
+              "seriesName": "Information",
+              "color": "blueDark"
+            }
+          ],
+          "ySettings": {
+            "numberFormatSettings": {
+              "unit": 0,
+              "options": {
+                "style": "decimal",
+                "useGrouping": true
+              }
+            }
+          }
+        }
+      },
+      "customWidth": "33",
+      "name": "query - 4"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "\r\nSqlAssessment_CL\r\n| extend asmt = parse_csv(RawData)\r\n| extend\r\n    AsmtId=tostring(asmt[1]),\r\n    CheckId=tostring(asmt[2]),\r\n    DisplayString=asmt[3],\r\n    Description=tostring(asmt[4]),\r\n    HelpLink=asmt[5],\r\n    TargetType=case(asmt[6] == 1, \"Server\", asmt[6] == 2, \"Database\", \"\"),\r\n    TargetName=tostring(asmt[7]), \r\n    Severity=case(asmt[8] == 30, \"High\", asmt[8] == 20, \"Medium\", asmt[8] == 10, \"Low\", asmt[8] == 0, \"Information\", asmt[8] == 1, \"Warning\", asmt[8] == 2, \"Critical\", \"Passed\"),\r\n    Message=tostring(asmt[9]),\r\n    TagsArr=split(tostring(asmt[10]), \",\"),\r\n    Sev = toint(asmt[8])\r\n    | order by CheckId, _ResourceId\r\n    | join kind=inner\r\n    (\r\n    SqlAssessment_CL\r\n    | extend asmt = parse_csv(RawData)\r\n    | extend\r\n        AsmtId=tostring(asmt[1])   \r\n    | summarize arg_max(TimeGenerated, *) by _ResourceId\r\n    | project AsmtId\r\n    ) on AsmtId\r\n    |where Sev >= 0   \r\n    and Severity == \"{severity}\"\r\n    | order by Sev, CheckId\r\n    | project CheckId, Description, _ResourceId, AsmtId, Sev, Severity \r\n",
+        "size": 3,
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "crossComponentResources": [
+          "{LogAnalitycsWorkpace}"
+        ]
+      },
+      "name": "query - 8"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "SqlAssessment_CL\r\n| extend asmt = parse_csv(RawData)\r\n| extend\r\n    AsmtId=tostring(asmt[1]),\r\n    CheckId=tostring(asmt[2]),\r\n    DisplayString=asmt[3],\r\n    Description=tostring(asmt[4]),\r\n    HelpLink=asmt[5],\r\n    TargetType=case(asmt[6] == 1, \"Server\", asmt[6] == 2, \"Database\", \"\"),\r\n    TargetName=tostring(asmt[7]), \r\n    Severity=case(asmt[8] == 30, \"High\", asmt[8] == 20, \"Medium\", asmt[8] == 10, \"Low\", asmt[8] == 0, \"Information\", asmt[8] == 1, \"Warning\", asmt[8] == 2, \"Critical\", \"Passed\"),\r\n    Message=tostring(asmt[9]),\r\n    TagsArr=split(tostring(asmt[10]), \",\"),\r\n    Sev = toint(asmt[8])\r\n    | order by CheckId, _ResourceId\r\n    | join kind=inner\r\n    (\r\n    SqlAssessment_CL\r\n    | extend asmt = parse_csv(RawData)\r\n    | extend\r\n        AsmtId=tostring(asmt[1])   \r\n    | summarize arg_max(TimeGenerated, *) by _ResourceId\r\n    | project AsmtId\r\n    ) on AsmtId\r\n    |where Sev >= 0   \r\n    and TargetType == \"Server\"\r\n    | order by Sev, CheckId\r\n    | summarize count() by TargetName \r\n",
+        "size": 3,
+        "title": "Issues by server",
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "crossComponentResources": [
+          "{LogAnalitycsWorkpace}"
+        ],
+        "visualization": "piechart",
+        "chartSettings": {
+          "seriesLabelSettings": [
+            {
+              "seriesName": "Protected",
+              "color": "green"
+            },
+            {
+              "seriesName": "Unknown",
+              "color": "gray"
+            },
+            {
+              "seriesName": "Not Protected",
+              "color": "redBright"
+            }
+          ]
+        }
+      },
+      "customWidth": "33",
+      "name": "query - 4 - Copy"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "SqlAssessment_CL\r\n| extend asmt = parse_csv(RawData)\r\n| extend\r\n    AsmtId=tostring(asmt[1]),\r\n    CheckId=tostring(asmt[2]),\r\n    DisplayString=asmt[3],\r\n    Description=tostring(asmt[4]),\r\n    HelpLink=asmt[5],\r\n    TargetType=case(asmt[6] == 1, \"Server\", asmt[6] == 2, \"Database\", \"\"),\r\n    TargetName=tostring(asmt[7]), \r\n    Severity=case(asmt[8] == 30, \"High\", asmt[8] == 20, \"Medium\", asmt[8] == 10, \"Low\", asmt[8] == 0, \"Information\", asmt[8] == 1, \"Warning\", asmt[8] == 2, \"Critical\", \"Passed\"),\r\n    Message=tostring(asmt[9]),\r\n    TagsArr=split(tostring(asmt[10]), \",\"),\r\n    Sev = toint(asmt[8])\r\n    | order by CheckId, _ResourceId\r\n    | join kind=inner\r\n    (\r\n    SqlAssessment_CL\r\n    | extend asmt = parse_csv(RawData)\r\n    | extend\r\n        AsmtId=tostring(asmt[1])   \r\n    | summarize arg_max(TimeGenerated, *) by _ResourceId\r\n    | project AsmtId\r\n    ) on AsmtId\r\n    |where Sev >= 0   \r\n    and TargetType == \"Database\"\r\n    | order by Sev, CheckId\r\n    | summarize count() by TargetName \r\n",
+        "size": 3,
+        "title": "Issues by Database",
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "crossComponentResources": [
+          "{LogAnalitycsWorkpace}"
+        ],
+        "visualization": "piechart"
+      },
+      "customWidth": "33",
+      "name": "query - 4 - Copy - Copy"
+    },
+    {
+      "type": 9,
+      "content": {
+        "version": "KqlParameterItem/1.0",
+        "crossComponentResources": [
+          "{LogAnalitycsWorkpace}"
+        ],
+        "parameters": [
+          {
+            "id": "ced45d66-52da-4f9c-b473-6781309a78cc",
+            "version": "KqlParameterItem/1.0",
+            "name": "CheckId",
+            "type": 2,
+            "isRequired": true,
+            "query": "\r\nSqlAssessment_CL\r\n| extend asmt = parse_csv(RawData)\r\n| extend\r\n    AsmtId=tostring(asmt[1]),\r\n    CheckId=tostring(asmt[2]),\r\n    DisplayString=asmt[3],\r\n    Description=tostring(asmt[4]),\r\n    HelpLink=asmt[5],\r\n    TargetType=case(asmt[6] == 1, \"Server\", asmt[6] == 2, \"Database\", \"\"),\r\n    TargetName=tostring(asmt[7]), \r\n    Severity=case(asmt[8] == 30, \"High\", asmt[8] == 20, \"Medium\", asmt[8] == 10, \"Low\", asmt[8] == 0, \"Information\", asmt[8] == 1, \"Warning\", asmt[8] == 2, \"Critical\", \"Passed\"),\r\n    Message=tostring(asmt[9]),\r\n    TagsArr=split(tostring(asmt[10]), \",\"),\r\n    Sev = toint(asmt[8])\r\n    | order by CheckId, _ResourceId\r\n    | join kind=inner\r\n    (\r\n    SqlAssessment_CL\r\n    | extend asmt = parse_csv(RawData)\r\n    | extend\r\n        AsmtId=tostring(asmt[1])   \r\n    | summarize arg_max(TimeGenerated, *) by _ResourceId\r\n    | project AsmtId\r\n    ) on AsmtId\r\n    |where Sev >= 0   \r\n    | distinct (CheckId)\r\n|order by CheckId asc\r\n\r\n\r\n   ",
+            "crossComponentResources": [
+              "{LogAnalitycsWorkpace}"
+            ],
+            "typeSettings": {
+              "additionalResourceOptions": [],
+              "showDefault": false
+            },
+            "timeContext": {
+              "durationMs": 2592000000
+            },
+            "queryType": 0,
+            "resourceType": "microsoft.operationalinsights/workspaces",
+            "value": "DbIntegrity"
+          }
+        ],
+        "style": "pills",
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces"
+      },
+      "name": "paarameter_CheckId"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "SqlAssessment_CL\r\n| extend asmt = parse_csv(RawData)\r\n| extend\r\n    AsmtId=tostring(asmt[1]),\r\n    CheckId=tostring(asmt[2]),\r\n    DisplayString=asmt[3],\r\n    Description=tostring(asmt[4]),\r\n    HelpLink=asmt[5],\r\n    TargetType=case(asmt[6] == 1, \"Server\", asmt[6] == 2, \"Database\", \"\"),\r\n    TargetName=tostring(asmt[7]), \r\n    Severity=case(asmt[8] == 30, \"High\", asmt[8] == 20, \"Medium\", asmt[8] == 10, \"Low\", asmt[8] == 0, \"Information\", asmt[8] == 1, \"Warning\", asmt[8] == 2, \"Critical\", \"Passed\"),\r\n    Message=tostring(asmt[9]),\r\n    TagsArr=split(tostring(asmt[10]), \",\"),\r\n    Sev = toint(asmt[8])\r\n    | order by CheckId, _ResourceId\r\n    | join kind=inner\r\n    (\r\n    SqlAssessment_CL\r\n    | extend asmt = parse_csv(RawData)\r\n    | extend\r\n        AsmtId=tostring(asmt[1])   \r\n    | summarize arg_max(TimeGenerated, *) by _ResourceId\r\n    | project AsmtId\r\n    ) on AsmtId\r\n    |where Sev >= 0   \r\n    and CheckId ==\"{CheckId}\"\r\n    | project _ResourceId, tostring(DisplayString), TargetType, CheckId\r\n    | summarize count() by _ResourceId, tostring(DisplayString), TargetType, CheckId\r\n    | order by CheckId",
+        "size": 3,
+        "title": "sqlmonitoring",
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "crossComponentResources": [
+          "{LogAnalitycsWorkpace}"
+        ],
+        "gridSettings": {
+          "formatters": [
+            {
+              "columnMatch": "createdAt",
+              "formatter": 0,
+              "formatOptions": {
+                "customColumnWidthSetting": "21.1429ch"
+              }
+            },
+            {
+              "columnMatch": "AzureArcServer",
+              "formatter": 0,
+              "formatOptions": {
+                "customColumnWidthSetting": "20.1429ch"
+              }
+            },
+            {
+              "columnMatch": "SQLInstance",
+              "formatter": 0,
+              "formatOptions": {
+                "customColumnWidthSetting": "23.4286ch"
+              }
+            },
+            {
+              "columnMatch": "version",
+              "formatter": 0,
+              "formatOptions": {
+                "customColumnWidthSetting": "21ch"
+              }
+            },
+            {
+              "columnMatch": "currentVersion",
+              "formatter": 0,
+              "formatOptions": {
+                "customColumnWidthSetting": "20ch"
+              }
+            },
+            {
+              "columnMatch": "patchLevel",
+              "formatter": 0,
+              "formatOptions": {
+                "customColumnWidthSetting": "17ch"
+              }
+            },
+            {
+              "columnMatch": "edition",
+              "formatter": 0,
+              "formatOptions": {
+                "customColumnWidthSetting": "11.4286ch"
+              }
+            },
+            {
+              "columnMatch": "vcores",
+              "formatter": 0,
+              "formatOptions": {
+                "customColumnWidthSetting": "9.7143ch"
+              }
+            },
+            {
+              "columnMatch": "subscriptionId",
+              "formatter": 13,
+              "formatOptions": {
+                "linkTarget": "Resource",
+                "showIcon": true,
+                "customColumnWidthSetting": "26.5714ch"
+              }
+            },
+            {
+              "columnMatch": "licenseType",
+              "formatter": 0,
+              "formatOptions": {
+                "customColumnWidthSetting": "14.4286ch"
+              }
+            },
+            {
+              "columnMatch": "azureDefenderStatus",
+              "formatter": 0,
+              "formatOptions": {
+                "customColumnWidthSetting": "25ch"
+              }
+            }
+          ],
+          "rowLimit": 500,
+          "filter": true
+        }
+      },
+      "name": "query - 1"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "SqlAssessment_CL\r\n| extend asmt = parse_csv(RawData)\r\n| extend\r\n    AsmtId=tostring(asmt[1]),\r\n    CheckId=tostring(asmt[2]),\r\n    DisplayString=asmt[3],\r\n    Description=tostring(asmt[4]),\r\n    HelpLink=asmt[5],\r\n    TargetType=case(asmt[6] == 1, \"Server\", asmt[6] == 2, \"Database\", \"\"),\r\n    TargetName=tostring(asmt[7]), \r\n    Severity=case(asmt[8] == 30, \"High\", asmt[8] == 20, \"Medium\", asmt[8] == 10, \"Low\", asmt[8] == 0, \"Information\", asmt[8] == 1, \"Warning\", asmt[8] == 2, \"Critical\", \"Passed\"),\r\n    Message=tostring(asmt[9]),\r\n    TagsArr=split(tostring(asmt[10]), \",\"),\r\n    Sev = toint(asmt[8])\r\n    | order by CheckId, _ResourceId\r\n    | join kind=inner\r\n    (\r\n    SqlAssessment_CL\r\n    | extend asmt = parse_csv(RawData)\r\n    | extend\r\n        AsmtId=tostring(asmt[1])   \r\n    | summarize arg_max(TimeGenerated, *) by _ResourceId\r\n    | project AsmtId\r\n    ) on AsmtId\r\n    |where Sev >= 0\r\n    | order by Sev, CheckId",
+        "size": 0,
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "crossComponentResources": [
+          "{LogAnalitycsWorkpace}"
+        ]
+      },
+      "name": "query - 0"
+    }
+  ],
+  "fallbackResourceIds": [
+    "azure monitor"
+  ],
+  "fromTemplateId": "sentinel-UserWorkbook",
+  "$schema": "https://github.com/Microsoft/Application-Insights-Workbooks/blob/master/schema/workbook.json"
+}
