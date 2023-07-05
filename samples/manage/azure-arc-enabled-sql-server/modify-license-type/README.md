@@ -68,7 +68,7 @@ The following command will scan resource group `<resource_group_name>` in the su
 The following command will set License Type to 'Paid" and enables ESU on all servers in the subscriptions `<sub_id>` and the resource group `<resource_group_name>`.
     
 ```console
-.//modify-license-type.ps1 -SubId <sub_id> -ResourceGroup <resource_group_name> -LicenseType Paid -EnableESU Yes -Force
+.\modify-license-type.ps1 -SubId <sub_id> -ResourceGroup <resource_group_name> -LicenseType Paid -EnableESU Yes -Force
 ```
 
 ## Example 5
@@ -76,7 +76,7 @@ The following command will set License Type to 'Paid" and enables ESU on all ser
 The following command will disable ESU on all servers in the subscriptions `<sub_id>`.
     
 ```console
-.//modify-license-type.ps1 -SubId <sub_id> -EnableESU No 
+.\modify-license-type.ps1 -SubId <sub_id> -EnableESU No 
 ```
 
 # Running the script using Cloud Shell
