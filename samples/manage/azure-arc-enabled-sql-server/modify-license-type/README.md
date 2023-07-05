@@ -3,7 +3,7 @@ services: Azure Arc-enabled SQL Server
 platforms: Azure
 author: anosov1960
 ms.author: sashan
-ms.date: 6/21/2023
+ms.date: 7/5/2023
 ---
 
 
@@ -32,7 +32,7 @@ The script accepts the following command line parameters:
 |-MachineName |machine_name|Optional: Limits the scope to a specific machine|
 |-LicenceType | "Paid", "PAYG" or "LicenseOnly"| Optional: Sets the license type to the specified value |
 |-EnableESU | "Yes", "No" | Optional. Enables the ESU policy the value is "Yrs" or disables it if the value is "No". To enable, the license type must be "Paid" or "PAYG"|
-|-Force|\$True or \$False (default)|Optional. Forces the change of the license type to the specified value on all installed extensions. If -Force is not specified, the -LicenseType value is set only if undefined. Ignored if -LicenseType  is not specified|
+|-Force| |Optional. Forces the change of the license type to the specified value on all installed extensions. If -Force is not specified, the -LicenseType value is set only if undefined. Ignored if -LicenseType  is not specified|
 
 <sup>1</sup>You can create a .csv file using the following command and then edit to remove the subscriptions you don't  want to scan.
 ```PowerShell
@@ -52,7 +52,7 @@ The following command will scan all the subscriptions to which the user has acce
 The following command will scan the subscription `<sub_id>` and set the license type value to "Paid" on all servers.
 
 ```PowerShell
-.\modify-license-type.ps1 -SubId <sub_id> -LicenseType Paid -Force $True
+.\modify-license-type.ps1 -SubId <sub_id> -LicenseType Paid -Force
 ```
 
 ## Example 3
@@ -60,7 +60,7 @@ The following command will scan the subscription `<sub_id>` and set the license 
 The following command will scan resource group <resource_group_name> in the subscription `<sub_id>` and set the license type value to "PAYG" on all servers.
 
 ```PowerShell
-.\modify-license-type.ps1 -SubId <sub_id> -ResourceGroup <resource_group_name> -LicenseType PAYG -Force $True
+.\modify-license-type.ps1 -SubId <sub_id> -ResourceGroup <resource_group_name> -LicenseType PAYG -Force
 ```
 
 # Running the script using Cloud Shell
