@@ -36,7 +36,7 @@ param (
     [ValidateSet("Yes","No", IgnoreCase=$false)]
     [string] $EnableESU,
     [Parameter (Mandatory= $true)]
-    [boolean] $Force=$false
+    [switch] $Force
 )
 
 function CheckModule ($m) {
