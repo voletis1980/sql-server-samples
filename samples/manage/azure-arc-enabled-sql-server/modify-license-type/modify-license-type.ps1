@@ -14,7 +14,7 @@
 # -LicenseType [license_type_value]             (Optional. Sets the license type to the specified value)
 # -EnabelESU  [Yes or No]                       (Optional. Enables the ESU policy the value is "Yes" or disables it if the value is "No"
 #                                               To enable, the license type must be "Paid" or "PAYG"
-# -Force [$true or $false]                      (Optional. Forces the chnahge of the license type to the specified value on all installed extensions.
+# -Force                                        (Optional. Forces the chnahge of the license type to the specified value on all installed extensions.
 #                                               If Force is not specified, the -LicenseType value is set only if undefined. Ignored if -LicenseType  is not specified
 #
 # This script uses a function ConvertTo-HashTable that was created by Adam Bertram (@adam-bertram).
@@ -35,7 +35,7 @@ param (
     [Parameter (Mandatory= $false)]
     [ValidateSet("Yes","No", IgnoreCase=$false)]
     [string] $EnableESU,
-    [Parameter (Mandatory= $true)]
+    [Parameter (Mandatory= $false)]
     [switch] $Force
 )
 
