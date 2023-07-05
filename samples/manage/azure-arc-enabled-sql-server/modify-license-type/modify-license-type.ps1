@@ -23,16 +23,16 @@
 #
 
 param (
-    [Parameter (Mandatory=$true)]
+    [Parameter (Mandatory=$false)]
     [string] $SubId,
-    [Parameter (Mandatory= $true)]
+    [Parameter (Mandatory= $false)]
     [string] $ResourceGroup,
     [Parameter (Mandatory= $false)]
     [string] $MachineName,
-    [Parameter (Mandatory= $true)]
+    [Parameter (Mandatory= $false)]
     [ValidateSet("PAYG","Paid","LicenseOnly", IgnoreCase=$false)]
     [string] $LicenseType,
-    [Parameter (Mandatory= $true)]
+    [Parameter (Mandatory= $false)]
     [ValidateSet("Yes","No", IgnoreCase=$false)]
     [string] $EnableESU,
     [Parameter (Mandatory= $true)]
