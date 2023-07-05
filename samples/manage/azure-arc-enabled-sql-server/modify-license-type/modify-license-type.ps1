@@ -1,37 +1,41 @@
 #
-# This script provides a scaleable solution to set or change the license type on all Azure-connected SQL Servers
-# in a specific subscription, a list of subscruiptions or the entire account. By default, it sets the new license
-# type value only on the servers where it is undefined.
+# This script provides a scaleable solution to set or change the license type and/or enable or disable the ESU policy 
+# on all Azure-connected SQL Servers in a specified scope.
 #
 # You can specfy a single subscription to scan, or provide subscriptions as a .CSV file with the list of IDs.
 # If not specified, all subscriptions your role has access to are scanned.
 #
 # The script accepts the following command line parameters:
 #
-# -SubId [subscription_id] | [csv_file_name]    (Limit scope to specific subscriptions. Accepts a .csv file with the list of subscriptions.
+# -SubId [subscription_id] | [csv_file_name]    (Optional. Limits the scope to specific subscriptions. Accepts a .csv file with the list of subscriptions.
 #                                               If not specified all subscriptions will be scanned)
-# -ResourceGroup [resource_goup]                (Limit scope  to a specific resoure group)
-# -MachineName [machine_name]                   (Limit scope to a specific machine)
-# -LicenseType [license_type_value]             (Specific LT value)
-# -Force                                        (Required. Set the new license type on all installed extensions.
-#                                               By default the value is set only if license type is undefined undefined)
+# -ResourceGroup [resource_goup]                (Optional. Limits the scope to a specific resoure group)
+# -MachineName [machine_name]                   (Optional. Limits the scope to a specific machine)
+# -LicenseType [license_type_value]             (Optional. Sets the license type to the specified value)
+# -EnabelESU  [Yes or No]                       (Optional. Enables the ESU policy the value is "Yes" or disables it if the value is "No"
+#                                               To enable, the license type must be "Paid" or "PAYG"
+# -Force [$true or $false]                      (Optional. Forces the chnahge of the license type to the specified value on all installed extensions.
+#                                               If Force is not specified, the -LicenseType value is set only if undefined. Ignored if -LicenseType  is not specified
 #
-# The script uses a function ConvertTo-HashTable that was created by Adam Bertram (@adam-bertram).
+# This script uses a function ConvertTo-HashTable that was created by Adam Bertram (@adam-bertram).
 # The function was originally published on https://4sysops.com/archives/convert-json-to-a-powershell-hash-table/
 # and is used here with the author's permission.
 #
 
 param (
-    [Parameter (Mandatory=$false)]
+    [Parameter (Mandatory=$true)]
     [string] $SubId,
-    [Parameter (Mandatory= $false)]
+    [Parameter (Mandatory= $true)]
     [string] $ResourceGroup,
     [Parameter (Mandatory= $false)]
     [string] $MachineName,
     [Parameter (Mandatory= $true)]
     [ValidateSet("PAYG","Paid","LicenseOnly", IgnoreCase=$false)]
     [string] $LicenseType,
-    [Parameter (Mandatory= $false)]
+    [Parameter (Mandatory= $true)]
+    [ValidateSet("Yes","No", IgnoreCase=$false)]
+    [string] $EnableESU,
+    [Parameter (Mandatory= $true)]
     [boolean] $Force=$false
 )
 
@@ -178,21 +182,49 @@ foreach ($sub in $subscriptions){
             ExtensionType = $r.extensionType
         }
 
+        $WriteSettings = $false
         $settings = @{}
         $settings = $r.properties.settings | ConvertTo-Json | ConvertFrom-Json | ConvertTo-Hashtable
 
-        if ($settings.ContainsKey("LicenseType")) {
-            if ($Force) {
-                if ($settings["LicenseType"] -ne $LicenseType ) {
+        # set the license type or update (if -Force). ESU  must be disabled to set to LicenseOnly. 
+        $LO_Allowed = (!$settings["enableExtendedSecurityUpdates"] -and !$EnableESU) -or  ($EnableESU -eq "No")
+            
+        if ($LicenseType) {
+            if (($LicenseType -eq "LicenseOnly") -and !$LO_Allowed) {
+                write-host "ESU must be disabled before license type can be set to $($LicenseType)"
+            } else {
+                if ($settings.ContainsKey("LicenseType")) {
+                    if ($Force) {
+                        $settings["LicenseType"] = $LicenseType
+                        $WriteSettings = $true
+                    }
+                } else {
                     $settings["LicenseType"] = $LicenseType
-                    Write-Host "Resource group: [$($r.resourceGroup)] Connected machine: [$($r.MachineName)] : License type: [$($settings["LicenseType"])]"
-                    Set-AzConnectedMachineExtension @setId -Settings $settings -NoWait | Out-Null
+                    $WriteSettings = $true
                 }
             }
-        } else {
-            $settings["LicenseType"] = $LicenseType
-            Write-Host "Resource group: [$($r.resourceGroup)] Connected machine: [$($r.MachineName)] : License type: [$($settings["LicenseType"])]"
-            Set-AzConnectedMachineExtension @setId -Settings $settings -NoWait | Out-Null
+            
+        }
+        
+        # Enable ESU for qualified license types or disable 
+        if ($EnableESU) {
+            if (($settings["LicenseType"] | select-string "Paid","PAYG") -or  ($EnableESU -eq "No")) {
+                $settings["enableExtendedSecurityUpdates"] = ($EnableESU -eq "Yes")
+                $WriteSettings = $true
+            } else {
+                write-host "The configured license type does not support ESUs" 
+            }
+        }
+
+        If ($WriteSettings) {
+            Write-Host "Resource group: [$($r.resourceGroup)] Connected machine: [$($r.MachineName)] : License type: [$($settings["LicenseType"])] : Enable ESU: [$($settings["enableExtendedSecurityUpdates"])]"
+            try { 
+                Set-AzConnectedMachineExtension @setId -Settings $settings -NoWait | Out-Null
+            } catch {
+                write-host "The request to modify the extenion object failed with the following error:"
+                write-host $_.Exception.Message
+                {continue}
+            }
         }
     }
 }

@@ -9,8 +9,7 @@ ms.date: 6/4/2023
 
 # Overview
 
-This script allows you to to set or change the license type on all Azure-connected SQL Servers
-on a specific resource, in a single resource group, a specific subscription, a list of subscriptions or all subscriptions to which you have access. By default, it sets the specified license type value on the servers where it is undefined. But you can request to set it on all servers in the selected scope.
+This script provides a scaleable solution to set or change the license type and/or enable or disable the ESU policy on all Azure-connected SQL Servers in a specified scope.
 
 You can specify a single subscription to scan, or provide a list of subscriptions as a .CSV file.
 If not specified, all subscriptions your role has access to are scanned.
@@ -28,11 +27,12 @@ The script accepts the following command line parameters:
 
 | **Parameter** &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  | **Value** &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; | **Description** |
 |:--|:--|:--|
-|-SubId|subscription_id *or* a file_name|Optional: subscription id or a .csv file with the list of subscriptions<sup>1</sup>. If not specified all subscriptions will be scanned|
-|-ResourceGroup |resource_group_name|Optional: Limit the scope  to a specific resource group|
-|-MachineName |machine_name|Optional: Limit the scope to a specific machine|
-|-LicenceType | "Paid", "PAYG" or "LicenseOnly"| Required: Specifies the license type value |
-|-Force|\$True or \$False (default)|Optional. Set the new license type for all installed extensions. By default the value is set only if license type is undefined.|
+|-SubId|subscription_id *or* a file_name|Optional: Subscription id or a .csv file with the list of subscriptions<sup>1</sup>. If not specified all subscriptions will be scanned|
+|-ResourceGroup |resource_group_name|Optional: Limits the scope  to a specific resource group|
+|-MachineName |machine_name|Optional: Limits the scope to a specific machine|
+|-LicenceType | "Paid", "PAYG" or "LicenseOnly"| Optional: Sets the license type to the specified value |
+|-EnableESU | "Yes", "No" | Optional. Enables the ESU policy the value is "Yrs" or disables it if the value is "No". To enable, the license type must be "Paid" or "PAYG"|
+|-Force|\$True or \$False (default)|Optional. Forces the change of the license type to the specified value on all installed extensions. If -Force is not specified, the -LicenseType value is set only if undefined. Ignored if -LicenseType  is not specified|
 
 <sup>1</sup>You can create a .csv file using the following command and then edit to remove the subscriptions you don't  want to scan.
 ```PowerShell
@@ -81,11 +81,7 @@ This option is recommended because Cloud shell has the Azure PowerShell modules 
     curl https://raw.githubusercontent.com/microsoft/sql-server-samples/master/samples/manage/azure-arc-enabled-sql-server/modify-license-type/modify-license-type.ps1 -o modify-license-type.ps1
     ```
 
-1. Run the script. The following command will set License Type to 'Paid" on all servers in all the subscriptions your role has access to.
-
-    ```console
-   .//modify-license-type.ps1 -LicenseType Paid -Force $true
-    ```
+1. Run the script. 
 
 > [!NOTE]
 > - To paste the commands into the shell, use `Ctrl-Shift-V` on Windows or `Cmd-v` on MacOS.
@@ -122,8 +118,22 @@ Use the following steps to run the script in a PowerShell session on your PC.
     Connect-AzAccount -TenantID (Get-AzureADTenantDetail).ObjectId
     ```
 
-1. Run the script using the desired scope. The following command will set License Type to 'Paid" on all servers in the specified subscription.
+1. Run the script using the desired scope. 
+    
+# Examples
+
+1. The following command will set License Type to 'Paid" on all servers in all the subscriptions your role has access to.
 
     ```console
-   .//modify-license-type.ps1 -SubId <sub_id> -LicenseType Paid -Force $true
+   .//modify-license-type.ps1 -LicenseType Paid -EnableESU Yes -Force $true
+    ```
+1. The following command will set License Type to 'Paid" and enables ESU on all servers in the subscriptions <your_sub_id> and the resource group <your_rg> role has access to.
+    
+    ```console
+   .//modify-license-type.ps1 -SubId <your_sub_id> -ResourceGroup <your_rg> -LicenseType Paid -EnableESU Yes -Force $true
+    ```
+1. The following command will disable ESU on all servers in the subscriptions <your_sub_id> and the resource group <your_rg> role has access to.
+    
+    ```console
+   .//modify-license-type.ps1 -SubId <your_sub_id> -ResourceGroup <your_rg> -EnableESU No -Force $true
     ```
