@@ -210,6 +210,7 @@ foreach ($sub in $subscriptions){
         if ($EnableESU) {
             if (($settings["LicenseType"] | select-string "Paid","PAYG") -or  ($EnableESU -eq "No")) {
                 $settings["enableExtendedSecurityUpdates"] = ($EnableESU -eq "Yes")
+                $settings["esuLastUpdatedTimestamp"] = [DateTime]::UtcNow.ToString('yyyy-MM-ddTHH:mm:ss.fffZ')
                 $WriteSettings = $true
             } else {
                 write-host "The configured license type does not support ESUs" 
