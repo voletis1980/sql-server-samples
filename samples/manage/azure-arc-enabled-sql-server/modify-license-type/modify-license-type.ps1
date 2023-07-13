@@ -39,33 +39,6 @@ param (
     [switch] $Force
 )
 
-function CheckModule ($m) {
-
-    # This function ensures that the specified module is imported into the session
-    # If module is already imported - do nothing
-
-    if (!(Get-Module | Where-Object {$_.Name -eq $m})) {
-         # If module is not imported, but available on disk then import
-        if (Get-Module -ListAvailable | Where-Object {$_.Name -eq $m}) {
-            Import-Module $m
-        }
-        else {
-
-            # If module is not imported, not available on disk, but is in online gallery then install and import
-            if (Find-Module -Name $m | Where-Object {$_.Name -eq $m}) {
-                Install-Module -Name $m -Force -Verbose -Scope CurrentUser
-                Import-Module $m
-            }
-            else {
-
-                # If module is not imported, not available and not in online gallery then abort
-                write-host "Module $m not imported, not available and not in online gallery, exiting."
-                EXIT 1
-            }
-        }
-    }
-}
-
 function ConvertTo-Hashtable {
     [CmdletBinding()]
     [OutputType('hashtable')]
@@ -105,6 +78,60 @@ function ConvertTo-Hashtable {
     }
 }
 
+# This function checks if the specified module is imported into the session and if not installes and/or imports it
+function LoadModule
+{
+    param (
+        [parameter(Mandatory = $true)][string] $name
+    )
+
+    $retVal = $true
+
+    if (!(Get-Module -Name $name))
+    {
+        $retVal = Get-Module -ListAvailable | Where-Object {$_.Name -eq $name)
+
+        if ($retVal)
+        {
+            try
+            {
+                Import-Module $name -ErrorAction SilentlyContinue
+            }
+            catch
+            {
+                write-host "The request to lload module $($name) failed with the following error:"
+                write-host $_.Exception.Message                
+                $retVal = $false
+            }
+        }
+        else {
+
+            # If module is not imported, not available on disk, but is in online gallery then install and import
+            if (Find-Module -Name $name) {
+                Install-Module -Name $name -Force -Verbose -Scope CurrentUser
+                try
+                {
+                Import-Module $name -ErrorAction SilentlyContinue
+                }
+                catch
+                {
+                    write-host "The request to lload module $($name) failed with the following error:"
+                    write-host $_.Exception.Message                
+                    $retVal = $false
+                }
+            }
+            else {
+
+                # If module is not imported, not available and not in online gallery then abort
+                write-host "Module $($name) not imported, not available and not in online gallery, exiting."
+                EXIT 1
+            }
+        }
+    }
+
+    return $retVal
+}
+
 #
 # Suppress warnings
 #
@@ -117,7 +144,7 @@ $requiredModules = @(
     "Az.ConnectedMachine",
     "Az.ResourceGraph"
 )
-$requiredModules | Foreach-Object {CheckModule $_}
+$requiredModules | Foreach-Object {LoadModule $_}
 
 # Subscriptions to scan
 
