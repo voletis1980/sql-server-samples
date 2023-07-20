@@ -89,7 +89,7 @@ function LoadModule
 
     if (!(Get-Module -Name $name))
     {
-        $retVal = Get-Module -ListAvailable | Where-Object {$_.Name -eq $name)
+        $retVal = Get-Module -ListAvailable | Where-Object {$_.Name -eq $name}
 
         if ($retVal)
         {
