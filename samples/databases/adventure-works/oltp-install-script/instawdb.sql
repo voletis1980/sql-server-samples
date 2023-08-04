@@ -6,7 +6,7 @@
   current version. 
 
   Date:     October 26, 2017
-  Updated:  October 26, 2017
+  Updated:  August 3, 2023
 
 ------------------------------------------------------------------------------
   This file is part of the Microsoft SQL Server Code Samples.
@@ -17,7 +17,7 @@
   Development Tools and/or on-line documentation.  See these other
   materials for detailed information regarding Microsoft code samples.
 
-  All data in this database is ficticious.
+  All data in this database is fictitious.
  
   THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
   KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
@@ -44,6 +44,17 @@
  */
 
 :setvar DatabaseName "AdventureWorks"
+GO
+
+/* Check for SQLCMD mode by checking a condition that evaluates to false in SQLCMD mode
+ */
+IF ('$(DatabaseName)' = '$' + '(DatabaseName)')
+    RAISERROR ('This script must be run in SQLCMD mode. Disconnecting.', 20, 1) WITH LOG
+GO
+-- The below is only run if SQLCMD is off, or the user lacks permission to raise fatal errors
+IF @@ERROR != 0
+    SET NOEXEC ON
+GO
 
 /* Execute the script
  */
@@ -1806,7 +1817,7 @@ WITH (
     CODEPAGE='ACP',
     DATAFILETYPE = 'char',
     FIELDTERMINATOR= '\t',
-    ROWTERMINATOR = '\n',
+    ROWTERMINATOR = '0x0a',
     KEEPIDENTITY,
     TABLOCK
 );
@@ -1820,14 +1831,12 @@ WITH (
     CODEPAGE='ACP',
     DATAFILETYPE = 'char',
     FIELDTERMINATOR= '\t',
-    ROWTERMINATOR = '\n',
+    ROWTERMINATOR = '0x0a',
     KEEPIDENTITY,
     TABLOCK
 );
 
 PRINT 'Loading [dbo].[AWBuildVersion]';
-
-
 
 INSERT INTO [dbo].[AWBuildVersion]
 VALUES
@@ -1842,7 +1851,7 @@ WITH (
     CODEPAGE='ACP',
     DATAFILETYPE = 'char',
     FIELDTERMINATOR= '\t',
-    ROWTERMINATOR = '\n',
+    ROWTERMINATOR = '0x0a',
     KEEPIDENTITY,
     TABLOCK
 );
@@ -1895,7 +1904,7 @@ WITH (
     CODEPAGE='ACP',
     DATAFILETYPE='char',
     FIELDTERMINATOR='\t',
-    ROWTERMINATOR='\n',
+    ROWTERMINATOR='0x0a',
     KEEPIDENTITY,
     TABLOCK
 );
@@ -1934,7 +1943,7 @@ WITH (
     CODEPAGE='ACP',
     DATAFILETYPE='char',
     FIELDTERMINATOR='\t',
-    ROWTERMINATOR='\n',
+    ROWTERMINATOR='0x0a',
     KEEPIDENTITY,
     TABLOCK
 );
@@ -1947,7 +1956,7 @@ WITH (
     CODEPAGE='ACP',
     DATAFILETYPE='char',
     FIELDTERMINATOR='\t',
-    ROWTERMINATOR='\n',
+    ROWTERMINATOR='0x0a',
     KEEPIDENTITY,
     TABLOCK
 );
@@ -1960,7 +1969,7 @@ WITH (
     CODEPAGE='ACP',
     DATAFILETYPE='char',
     FIELDTERMINATOR='\t',
-    ROWTERMINATOR='\n',
+    ROWTERMINATOR='0x0a',
     KEEPIDENTITY,
     TABLOCK
 );
@@ -1973,7 +1982,7 @@ WITH (
     CODEPAGE='ACP',
     DATAFILETYPE='char',
     FIELDTERMINATOR='\t',
-    ROWTERMINATOR='\n',
+    ROWTERMINATOR='0x0a',
     KEEPIDENTITY,
     TABLOCK
 );
@@ -1987,7 +1996,7 @@ WITH (
     CODEPAGE='ACP',
     DATAFILETYPE='char',
     FIELDTERMINATOR='\t',
-    ROWTERMINATOR='\n',
+    ROWTERMINATOR='0x0a',
     KEEPIDENTITY,
     TABLOCK
 );
@@ -2002,7 +2011,7 @@ WITH (
     CODEPAGE='ACP',
     DATAFILETYPE='char',
     FIELDTERMINATOR='\t',
-    ROWTERMINATOR='\n',
+    ROWTERMINATOR='0x0a',
     KEEPIDENTITY,
     TABLOCK
 );
@@ -2056,7 +2065,7 @@ WITH (
     CODEPAGE='ACP',
     DATAFILETYPE='char',
     FIELDTERMINATOR='\t',
-    ROWTERMINATOR='\n',
+    ROWTERMINATOR='0x0a',
     KEEPIDENTITY,
     TABLOCK
 );
@@ -2069,7 +2078,7 @@ WITH (
     CODEPAGE='ACP',
     DATAFILETYPE='char',
     FIELDTERMINATOR='\t',
-    ROWTERMINATOR='\n',
+    ROWTERMINATOR='0x0a',
     KEEPIDENTITY,
     TABLOCK
 );
@@ -2112,7 +2121,7 @@ WITH (
     CODEPAGE='ACP',
     DATAFILETYPE='char',
     FIELDTERMINATOR='\t',
-    ROWTERMINATOR='\n',
+    ROWTERMINATOR='0x0a',
     KEEPIDENTITY,
     TABLOCK
 );
@@ -2152,7 +2161,7 @@ WITH (
     CODEPAGE='ACP',
     DATAFILETYPE='char',
     FIELDTERMINATOR='\t',
-    ROWTERMINATOR='\n',
+    ROWTERMINATOR='0x0a',
     KEEPIDENTITY,
     TABLOCK
 );
@@ -2192,7 +2201,7 @@ WITH (
     CODEPAGE='ACP',
     DATAFILETYPE='char',
     FIELDTERMINATOR='\t',
-    ROWTERMINATOR='\n',
+    ROWTERMINATOR='0x0a',
     KEEPIDENTITY,
     TABLOCK
 );
@@ -2205,7 +2214,7 @@ WITH (
     CODEPAGE='ACP',
     DATAFILETYPE='char',
     FIELDTERMINATOR='\t',
-    ROWTERMINATOR='\n',
+    ROWTERMINATOR='0x0a',
     KEEPIDENTITY,
     TABLOCK
 );
@@ -2218,7 +2227,7 @@ WITH (
     CODEPAGE='ACP',
     DATAFILETYPE='char',
     FIELDTERMINATOR='\t',
-    ROWTERMINATOR='\n',
+    ROWTERMINATOR='0x0a',
     KEEPIDENTITY,
     TABLOCK
 );
@@ -2244,7 +2253,7 @@ WITH (
     CODEPAGE='ACP',
     DATAFILETYPE='char',
     FIELDTERMINATOR='\t',
-    ROWTERMINATOR='\n',
+    ROWTERMINATOR='0x0a',
     KEEPIDENTITY,
     TABLOCK  
 );
@@ -2257,7 +2266,7 @@ WITH (
     CODEPAGE='ACP',
     DATAFILETYPE='char',
     FIELDTERMINATOR='\t',
-    ROWTERMINATOR='\n',
+    ROWTERMINATOR='0x0a',
     KEEPIDENTITY,
     TABLOCK
 );
@@ -2270,7 +2279,7 @@ WITH (
     CODEPAGE='ACP',
     DATAFILETYPE='char',
     FIELDTERMINATOR='\t',
-    ROWTERMINATOR='\n',
+    ROWTERMINATOR='0x0a',
     KEEPIDENTITY,
     TABLOCK
 );
@@ -2296,7 +2305,7 @@ WITH (
     CODEPAGE='ACP',
     DATAFILETYPE='char',
     FIELDTERMINATOR='\t',
-    ROWTERMINATOR='\n',
+    ROWTERMINATOR='0x0a',
     KEEPIDENTITY,
     TABLOCK
 );
@@ -2309,7 +2318,7 @@ WITH (
     CODEPAGE='ACP',
     DATAFILETYPE='char',
     FIELDTERMINATOR='\t',
-    ROWTERMINATOR='\n',
+    ROWTERMINATOR='0x0a',
     KEEPIDENTITY,
     TABLOCK
 );
@@ -2335,7 +2344,7 @@ WITH (
     CODEPAGE='ACP',
     DATAFILETYPE='char',
     FIELDTERMINATOR='\t',
-    ROWTERMINATOR='\n',
+    ROWTERMINATOR='0x0a',
     KEEPIDENTITY,
     TABLOCK
 );
@@ -2348,7 +2357,7 @@ WITH (
     CODEPAGE='ACP',
     DATAFILETYPE='char',
     FIELDTERMINATOR='\t',
-    ROWTERMINATOR='\n',
+    ROWTERMINATOR='0x0a',
     KEEPIDENTITY,
     TABLOCK
 );
@@ -2361,7 +2370,7 @@ WITH (
     CODEPAGE='ACP',
     DATAFILETYPE='char',
     FIELDTERMINATOR='\t',
-    ROWTERMINATOR='\n',
+    ROWTERMINATOR='0x0a',
     KEEPIDENTITY,
     TABLOCK
 );
@@ -2375,7 +2384,7 @@ WITH (
     CODEPAGE='ACP',
     DATAFILETYPE='char',
     FIELDTERMINATOR='\t',
-    ROWTERMINATOR='\n',
+    ROWTERMINATOR='0x0a',
     KEEPIDENTITY,
     TABLOCK
 );
@@ -2389,7 +2398,7 @@ WITH (
     CODEPAGE='ACP',
     DATAFILETYPE='char',
     FIELDTERMINATOR='\t',
-    ROWTERMINATOR='\n',
+    ROWTERMINATOR='0x0a',
     KEEPIDENTITY,
     TABLOCK
 );
@@ -2402,7 +2411,7 @@ WITH (
     CODEPAGE='ACP',
     DATAFILETYPE='char',
     FIELDTERMINATOR='\t',
-    ROWTERMINATOR='\n',
+    ROWTERMINATOR='0x0a',
     KEEPIDENTITY,
     TABLOCK
 );
@@ -2415,7 +2424,7 @@ WITH (
     CODEPAGE='ACP',
     DATAFILETYPE='char',
     FIELDTERMINATOR='\t',
-    ROWTERMINATOR='\n',
+    ROWTERMINATOR='0x0a',
     KEEPIDENTITY,
     TABLOCK
 );
@@ -2428,7 +2437,7 @@ WITH (
     CODEPAGE='ACP',
     DATAFILETYPE='char',
     FIELDTERMINATOR='\t',
-    ROWTERMINATOR='\n',
+    ROWTERMINATOR='0x0a',
     KEEPIDENTITY,
     TABLOCK
 );
@@ -2442,7 +2451,7 @@ WITH (
     CODEPAGE='ACP',
     DATAFILETYPE='char',
     FIELDTERMINATOR='\t',
-    ROWTERMINATOR='\n',
+    ROWTERMINATOR='0x0a',
     KEEPIDENTITY,
     TABLOCK
 );
@@ -2456,7 +2465,7 @@ WITH (
     CODEPAGE='ACP',
     DATAFILETYPE='char',
     FIELDTERMINATOR='\t',
-    ROWTERMINATOR='\n',
+    ROWTERMINATOR='0x0a',
     KEEPIDENTITY,
     TABLOCK
 );
@@ -2470,7 +2479,7 @@ WITH (
     CODEPAGE='ACP',
     DATAFILETYPE='char',
     FIELDTERMINATOR='\t',
-    ROWTERMINATOR='\n',
+    ROWTERMINATOR='0x0a',
     KEEPIDENTITY,
     TABLOCK
 );
@@ -2484,7 +2493,7 @@ WITH (
     CODEPAGE='ACP',
     DATAFILETYPE='char',
     FIELDTERMINATOR='\t',
-    ROWTERMINATOR='\n',
+    ROWTERMINATOR='0x0a',
     KEEPIDENTITY,
     TABLOCK
 );
@@ -2497,7 +2506,7 @@ WITH (
     CODEPAGE='ACP',
     DATAFILETYPE='char',
     FIELDTERMINATOR='\t',
-    ROWTERMINATOR='\n',
+    ROWTERMINATOR='0x0a',
     KEEPIDENTITY,
     TABLOCK
 );
@@ -2510,7 +2519,7 @@ WITH (
     CODEPAGE='ACP',
     DATAFILETYPE='char',
     FIELDTERMINATOR='\t',
-    ROWTERMINATOR='\n',
+    ROWTERMINATOR='0x0a',
     KEEPIDENTITY,
     TABLOCK
 );
@@ -2523,7 +2532,7 @@ WITH (
     CODEPAGE='ACP',
     DATAFILETYPE='char',
     FIELDTERMINATOR='\t',
-    ROWTERMINATOR='\n',
+    ROWTERMINATOR='0x0a',
     KEEPIDENTITY,
     TABLOCK
 );
@@ -2537,7 +2546,7 @@ WITH (
     CODEPAGE='ACP',
     DATAFILETYPE='char',
     FIELDTERMINATOR='\t',
-    ROWTERMINATOR='\n',
+    ROWTERMINATOR='0x0a',
     KEEPIDENTITY,
     TABLOCK
 );
@@ -2550,7 +2559,7 @@ WITH (
     CODEPAGE='ACP',
     DATAFILETYPE='char',
     FIELDTERMINATOR='\t',
-    ROWTERMINATOR='\n',
+    ROWTERMINATOR='0x0a',
     KEEPIDENTITY,
     TABLOCK
 );
@@ -2563,7 +2572,7 @@ WITH (
     CODEPAGE='ACP',
     DATAFILETYPE='char',
     FIELDTERMINATOR='\t',
-    ROWTERMINATOR='\n',
+    ROWTERMINATOR='0x0a',
     KEEPIDENTITY,
     TABLOCK
 );
@@ -2576,7 +2585,7 @@ WITH (
     CODEPAGE='ACP',
     DATAFILETYPE='char',
     FIELDTERMINATOR='\t',
-    ROWTERMINATOR='\n',
+    ROWTERMINATOR='0x0a',
     KEEPIDENTITY,
     TABLOCK
 );
@@ -2589,7 +2598,7 @@ WITH (
     CODEPAGE='ACP',
     DATAFILETYPE='char',
     FIELDTERMINATOR='\t',
-    ROWTERMINATOR='\n',
+    ROWTERMINATOR='0x0a',
     KEEPIDENTITY,
     TABLOCK
 );
@@ -2602,7 +2611,7 @@ WITH (
     CODEPAGE='ACP',
     DATAFILETYPE='char',
     FIELDTERMINATOR='\t',
-    ROWTERMINATOR='\n',
+    ROWTERMINATOR='0x0a',
     KEEPIDENTITY,
     TABLOCK
 );
@@ -2642,7 +2651,7 @@ WITH (
     CODEPAGE='ACP',
     DATAFILETYPE='char',
     FIELDTERMINATOR='\t',
-    ROWTERMINATOR='\n',
+    ROWTERMINATOR='0x0a',
     TABLOCK
 );
 
@@ -2654,7 +2663,7 @@ WITH (
     CODEPAGE='ACP',
     DATAFILETYPE='char',
     FIELDTERMINATOR='\t',
-    ROWTERMINATOR='\n',
+    ROWTERMINATOR='0x0a',
     KEEPIDENTITY,
     TABLOCK
 );
@@ -2667,7 +2676,7 @@ WITH (
     CODEPAGE='ACP',
     DATAFILETYPE='char',
     FIELDTERMINATOR='\t',
-    ROWTERMINATOR='\n',
+    ROWTERMINATOR='0x0a',
     KEEPIDENTITY,
     TABLOCK
 );
@@ -2680,7 +2689,7 @@ WITH (
     CODEPAGE='ACP',
     DATAFILETYPE='char',
     FIELDTERMINATOR='\t',
-    ROWTERMINATOR='\n',
+    ROWTERMINATOR='0x0a',
     KEEPIDENTITY,
     TABLOCK
 );
@@ -2693,7 +2702,7 @@ WITH (
     CODEPAGE='ACP',
     DATAFILETYPE='char',
     FIELDTERMINATOR='\t',
-    ROWTERMINATOR='\n',
+    ROWTERMINATOR='0x0a',
     KEEPIDENTITY,
     TABLOCK
 );
@@ -2706,7 +2715,7 @@ WITH (
     CODEPAGE='ACP',
     DATAFILETYPE='char',
     FIELDTERMINATOR='\t',
-    ROWTERMINATOR='\n',
+    ROWTERMINATOR='0x0a',
     KEEPIDENTITY,
     TABLOCK
 );
