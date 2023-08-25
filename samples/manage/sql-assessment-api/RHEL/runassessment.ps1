@@ -138,4 +138,4 @@ finally {
         | ConvertTo-Json -AsArray
         | Set-Content $errorPath -Encoding UTF8NoBOM
     }
-}cd dev/
+}
