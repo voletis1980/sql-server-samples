@@ -96,7 +96,8 @@ try {
     $login, $pwd    = Get-Content '/var/opt/mssql/secrets/assessment' -Encoding UTF8NoBOM -TotalCount 2
     $securePassword = ConvertTo-SecureString $pwd -AsPlainText -Force
     $credential     = New-Object System.Management.Automation.PSCredential ($login, $securePassword)
-
+    $securePassword.MakeReadOnly()
+    
     Write-Verbose "Acquired credentials"
 
     $serverInstance = '.'
@@ -111,15 +112,15 @@ try {
         }
     }
 
-    $serverName = (Invoke-SqlCmd -ServerInstance $serverInstance -Credential $credential -Query "SELECT @@SERVERNAME")[0]
-    $hostName   = (Invoke-SqlCmd -ServerInstance $serverInstance -Credential $credential -Query "SELECT HOST_NAME()")[0]
+    $serverName = (Invoke-SqlCmd -ServerInstance $serverInstance -Credential $credential -Query "SELECT @@SERVERNAME" -TrustServerCertificate)[0]
+    $hostName   = (Invoke-SqlCmd -ServerInstance $serverInstance -Credential $credential -Query "SELECT HOST_NAME()" -TrustServerCertificate)[0]
 
     # Invoke assessment and store results.
     # Replace 'ConvertTo-Json' with 'ConvertTo-Csv' to change output format.
     # Available output formats: JSON, CSV, XML.
     # Encoding parameter is optional.
 
-    Get-SqlInstance -ServerInstance $serverInstance -Credential $credential -ErrorAction Stop
+    Get-SqlInstance -ServerInstance $serverInstance -Credential $credential -ErrorAction Stop -TrustServerCertificate
     | Get-TargetsRecursive
     | %{ Write-Verbose "Invoke assessment on $($_.Urn)"; $_ }
     | Invoke-SqlAssessment 3>&1
@@ -137,4 +138,4 @@ finally {
         | ConvertTo-Json -AsArray
         | Set-Content $errorPath -Encoding UTF8NoBOM
     }
-}
+}cd dev/
