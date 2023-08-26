@@ -112,15 +112,16 @@ try {
         }
     }
 
-    $serverName = (Invoke-SqlCmd -ServerInstance $serverInstance -Credential $credential -Query "SELECT @@SERVERNAME" -TrustServerCertificate)[0]
-    $hostName   = (Invoke-SqlCmd -ServerInstance $serverInstance -Credential $credential -Query "SELECT HOST_NAME()" -TrustServerCertificate)[0]
+    # IMPORTANT: If the script is run in trusted environments and there is a prelogin handshake error, add -TrustServerCertificate flag in lines 116, 117 and 124 
+    $serverName = (Invoke-SqlCmd -ServerInstance $serverInstance -Credential $credential -Query "SELECT @@SERVERNAME")[0]
+    $hostName   = (Invoke-SqlCmd -ServerInstance $serverInstance -Credential $credential -Query "SELECT HOST_NAME()")[0]
 
     # Invoke assessment and store results.
     # Replace 'ConvertTo-Json' with 'ConvertTo-Csv' to change output format.
     # Available output formats: JSON, CSV, XML.
     # Encoding parameter is optional.
 
-    Get-SqlInstance -ServerInstance $serverInstance -Credential $credential -ErrorAction Stop -TrustServerCertificate
+    Get-SqlInstance -ServerInstance $serverInstance -Credential $credential -ErrorAction Stop
     | Get-TargetsRecursive
     | %{ Write-Verbose "Invoke assessment on $($_.Urn)"; $_ }
     | Invoke-SqlAssessment 3>&1
