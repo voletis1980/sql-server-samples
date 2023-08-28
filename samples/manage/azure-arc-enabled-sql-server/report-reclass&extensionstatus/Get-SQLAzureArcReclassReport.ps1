@@ -1,4 +1,5 @@
-# This script return a report of the instances that should return SQL Reclass from the Azure Arc servers perspective
+#Requires -Modules Az.ResourceGraph, Az.ConnectedMachine, Az.Accounts
+# This script returns a report of the instances that should return SQL Reclass from the Azure Arc servers perspective
 # It also returns all the extension status from Arc Servers that has mssqldiscovered to true
 
 #region Sample queries
@@ -96,7 +97,7 @@ $results = foreach ($group in $ResultsGlobalGrouped) {
 
 # The following exports in a CSV file the servers that are effectively generating ACR (2008 is not suported)
 $global:ArcSQLServerinstanceswithReclass = $results | where version -notlike *2008*
-$ArcSQLServerinstanceswithReclass | Export-Csv -Path .\ArcSQLServerinstanceswithReclass.csv -Force
+$ArcSQLServerinstanceswithReclass | Export-Csv -Path .\ArcSQLServerinstanceswithReclass.csv -Force -NoTypeInformation
 Write-Host "Results where exported to file 'ArcSQLServerinstanceswithReclass.csv' in the local folder" -ForegroundColor Green
 #endregion
 
@@ -111,7 +112,7 @@ $queryExtensionSatus = @"
 resources
 | where type =~ 'microsoft.hybridcompute/machines'
 | where properties.detectedProperties.mssqldiscovered == "true"
-| extend id = tolower(id), ResourceGroup = split (id,'/',8)[0], Status = properties.status
+| extend id = tolower(id), ResourceGroup = split (id,'/',4)[0], Status = properties.status
 | join kind = inner (resources
 | where type == 'microsoft.hybridcompute/machines/extensions' 
 | where properties.type == "WindowsAgent.SqlServer"
@@ -125,7 +126,14 @@ Write-Host "`nQuerying status of the SQL Extensions in azure Arc servers .. `n" 
 $global:SQLExtensionStatus = Search-AzGraph -Query $queryExtensionSatus -First 1000
 
 # The following exports in a CSV file the status of the SQL extension in the Azure Arc Servers
-$SQLExtensionStatus | Export-Csv -Path .\SQLExtensionStatus.csv -Force
+$SQLExtensionStatus | Export-Csv -Path .\SQLExtensionStatus.csv -Force -NoTypeInformation
 Write-Host "Results where exported to file 'SQLExtensionStatus.csv' in the local folder" -ForegroundColor Green
 
+# region samples
+# Servers with the license not set to Paid:
+#$ArcSQLServerinstanceswithReclass | where licenseTypeinGraph -ne "Paid" | Select-Object subscriptionId,resourceGroup,AzureArcServerName,Status -Unique
 
+#Extensionstofix
+#$ExtensionStatus | Out-GridView
+
+#endregion
