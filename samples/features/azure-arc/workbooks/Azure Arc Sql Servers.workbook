@@ -222,7 +222,7 @@
       "type": 3,
       "content": {
         "version": "KqlItem/1.0",
-        "query": "resources\r\n| where type =~ \"Microsoft.AzureArcData/sqlServerInstances\"\r\n| extend SQLInstance = id, AzureArcServer = tolower(tostring(properties.containerResourceId))\r\n| join kind=inner (resources\r\n| where type in ('microsoft.hybridcompute/machines')\r\n| where properties.status != \"Expired\"\r\n| extend id = tolower(id)) on $left.AzureArcServer == $right.id\r\n| where SQLInstance like \"{SQLInstance}\"\r\n| where AzureArcServer like \"{ServerName}\"\r\n| extend createdAt = format_datetime(todatetime(systemData.createdAt), 'yyyy-MM-dd hh:mm:ss')\r\n| extend version = tostring(properties.version)\r\n| extend edition = tostring(properties.edition)\r\n| extend currentVersion = tostring(properties.currentVersion)\r\n| extend licenseType = tostring(properties.licenseType)\r\n| extend azureDefenderStatus = tostring(properties.azureDefenderStatus)\r\n| extend patchLevel = tostring(properties.patchLevel)\r\n| extend vcores = toint(properties.vCore)\r\n| project createdAt,AzureArcServer,SQLInstance,version,currentVersion,patchLevel,edition,vcores,subscriptionId,licenseType,azureDefenderStatus\r\n",
+        "query": "resources\r\n| where type =~ \"Microsoft.AzureArcData/sqlServerInstances\"\r\n| extend SQLInstance = id, AzureArcServer = tolower(tostring(properties.containerResourceId))\r\n| join kind=inner (resources\r\n| where type in ('microsoft.hybridcompute/machines')\r\n| where properties.status != \"Expired\"\r\n| extend model = tostring(properties.detectedProperties.model)\r\n| extend id = tolower(id)) on $left.AzureArcServer == $right.id\r\n| where SQLInstance like \"{SQLInstance}\"\r\n| where AzureArcServer like \"{ServerName}\"\r\n| extend createdAt = format_datetime(todatetime(systemData.createdAt), 'yyyy-MM-dd hh:mm:ss')\r\n| extend version = tostring(properties.version)\r\n| extend edition = tostring(properties.edition)\r\n| extend currentVersion = tostring(properties.currentVersion)\r\n| extend licenseType = tostring(properties.licenseType)\r\n| extend azureDefenderStatus = tostring(properties.azureDefenderStatus)\r\n| extend patchLevel = tostring(properties.patchLevel)\r\n| extend vcores = toint(properties.vCore)\r\n| project createdAt,AzureArcServer,SQLInstance,version,currentVersion,patchLevel,edition,model,vcores,subscriptionId,licenseType,azureDefenderStatus\r\n",
         "size": 0,
         "showAnalytics": true,
         "queryType": 1,
@@ -257,14 +257,14 @@
               "columnMatch": "version",
               "formatter": 0,
               "formatOptions": {
-                "customColumnWidthSetting": "21ch"
+                "customColumnWidthSetting": "19ch"
               }
             },
             {
               "columnMatch": "currentVersion",
               "formatter": 0,
               "formatOptions": {
-                "customColumnWidthSetting": "20ch"
+                "customColumnWidthSetting": "17.4286ch"
               }
             },
             {
@@ -279,6 +279,13 @@
               "formatter": 0,
               "formatOptions": {
                 "customColumnWidthSetting": "11.4286ch"
+              }
+            },
+            {
+              "columnMatch": "model",
+              "formatter": 0,
+              "formatOptions": {
+                "customColumnWidthSetting": "18.4286ch"
               }
             },
             {
