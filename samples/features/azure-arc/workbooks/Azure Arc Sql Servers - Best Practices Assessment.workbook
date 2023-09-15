@@ -4,7 +4,7 @@
     {
       "type": 1,
       "content": {
-        "json": "# Azure Arc SQL Servers - Best Practices Analyzer"
+        "json": "# Azure Arc SQL Servers - Best Practices Assessment"
       },
       "name": "text - 2"
     },
