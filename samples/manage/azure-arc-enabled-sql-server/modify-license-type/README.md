@@ -3,7 +3,7 @@ services: Azure Arc-enabled SQL Server
 platforms: Azure
 author: anosov1960
 ms.author: sashan
-ms.date: 7/5/2023
+ms.date: 9/22/2023
 ---
 
 
@@ -16,7 +16,7 @@ If not specified, all subscriptions your role has access to are scanned.
 
 # Prerequisites
 
-- You must have at least a *Contributor* role in each subscription you modify.
+- You must have at least a *Azure Connected Machine Resource Administrator* role in each subscription you modify.
 - The Azure extension for SQL Server is updated to version 1.1.2230.58 or newer.
 - You must be connected to Azure AD and logged in to your Azure account. If your account have access to multiple tenants, make sure to log in with a specific tenant ID.
 
