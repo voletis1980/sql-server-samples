@@ -14,7 +14,8 @@ This section contains workbooks to use with Azure Arc SQL Servers. Please follow
 
 
 ## Azure Arc SQL Best Practices Assessment
-![AzureSQLServerBPA](img/AzureSqlServerBPA.png)
+![AzureSQLServerBPA](img/AzureSqlServerBPAa.png)
+![AzureSQLServerBPA](img/AzureSqlServerBPAb.png)
 
 
 ## Disclaimers
