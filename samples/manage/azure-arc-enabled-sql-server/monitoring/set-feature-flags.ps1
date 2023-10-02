@@ -27,11 +27,11 @@
 .EXAMPLE
     To enable the SqlManagement and AG discovery features in your subscription 
     in resource group contoso-rg for machine contoso-sql-host, the command would be:
-    SetArcSqlServerFeatureFlags.ps1 `
+    set-feature-flags.ps1 `
        -Subscription "<Your-subscription-ID>" `
        -ResourceGroup "contoso-rg" `
        -MachineName "contoso-sql-host" `
-       -FeatureFlagsToEnable ("AvailabilityGroupDiscovery", "SqlManagement")
+       -FeatureFlagsToEnable ("SqlManagement")
 
 .NOTES
     Author: Sarah Feitler
