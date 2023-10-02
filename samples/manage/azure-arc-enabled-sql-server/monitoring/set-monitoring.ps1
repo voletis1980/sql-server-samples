@@ -25,10 +25,10 @@
     send the modified settings to the extension. DryRun can be used to verify changes before
     executing them.
 .EXAMPLE
-    To enable the SqlManagement and AG discovery features in subscription b1232743-66f2-4e4e-b066-09edecbe5cf9
+    To enable the SqlManagement and AG discovery features in your subscription 
     in resource group contoso-rg for machine contoso-sql-host, the command would be:
     SetArcSqlServerFeatureFlags.ps1 `
-       -Subscription "b1232743-66f2-4e4e-b066-09edecbe5cf9" `
+       -Subscription "<Your-subscription-ID" `
        -ResourceGroup "contoso-rg" `
        -MachineName "contoso-sql-host" `
        -FeatureFlagsToEnable ("AvailabilityGroupDiscovery", "SqlManagement")
