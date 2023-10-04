@@ -5,7 +5,7 @@ author: racarb
 ms.date: 24/8/2023
 ---
 
-
+## Azure Arc SQL Reclass Report
 # Overview
 
 This script provides a report of the Azure Arc SQL resources that generate SQL Reclass, including the following information from each resource in a CSV format:
