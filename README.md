@@ -18,10 +18,10 @@ To see the complete list of resources in this repository, navigate to [Releases]
 ## Working in GitHub
 To contribute on GitHub, follow these steps:
 
-1.Visit https://github.com/microsoft/sql-server-samples and fork the repository.
-2.Work in your forked repository.
-3.When you're ready to make changes or publish your sample for the first time, submit a pull request into the 'master' branch of 'sql-server-samples'.
-4.One of the approvers will review your request and either accept or reject the pull request.
+-1.Visit https://github.com/microsoft/sql-server-samples and fork the repository.
+-2.Work in your forked repository.
+-3.When you're ready to make changes or publish your sample for the first time, submit a pull request into the 'master' branch of 'sql-server-samples'.
+-4.One of the approvers will review your request and either accept or reject the pull request.
 
 Each sample should be in its own folder with a README.md file that follows the [template](README_samples_template.md). Generated files (e.g., .exe or .bacpac) and user configuration settings (e.g., .user) should not be committed to GitHub.
 
