@@ -145,10 +145,8 @@ resource sourceControl 'Microsoft.Web/sites/sourcecontrols@2022-09-01' = {
   parent: WebApp_Resource
   name: 'web'
   properties: {
-    //repoUrl: 'https://github.com/microsoft/sql-server-samples.git'
-    repoUrl : 'https://github.com/Pietervanhove/sql-server-samples.git'
-    //branch: 'master'
-    branch: 'AlwaysEncryptedDemos'
+    repoUrl: 'https://github.com/microsoft/sql-server-samples.git'
+    branch: 'master'
     isManualIntegration: true
   }
   dependsOn: [
