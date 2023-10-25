@@ -134,7 +134,7 @@ Set-SqlColumnEncryption -ColumnEncryptionSettings $encryptedColumnSettings -Inpu
 ######################################################################
 
 $resourceGroupName = "${projectName}"
-$attestationProviderName = "${projectName}attest"
+$attestationProviderName = "${projectName}attestation"
 $policyFile = "AttestationPolicy.txt"
 $teeType = "SgxEnclave"
 $policyFormat = "Text"
