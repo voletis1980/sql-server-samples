@@ -35,7 +35,6 @@ New-AzResourceGroup -Name $resourceGroupName -Location $location
 # Deploy the resources for the demo environment
 ######################################################################
 
-
 New-AzResourceGroupDeployment `
   -ResourceGroupName $resourceGroupName `
   -TemplateFile $bicepFile `
@@ -106,7 +105,7 @@ $keyName = "CMK"
 $key = Get-AzKeyVaultKey -VaultName $keyVaultName -Name $keyName
 
 # Connect to the database using the SqlServer PowerShell module
-$connStr = "Data Source=tcp:$serverName;Initial Catalog=$databaseName;User ID=$sqlAdminUserName;Password=$sqlAdminPassword"
+$connStr = "Data Source=tcp:$serverName;Initial Catalog=$databaseName;User ID=$sqlAdminUserName;Password=$sqlAdminPasswordSecureString"
 $database = Get-SqlDatabase -ConnectionString $connStr
 
 # Sign in to Azure with your email address using the SqlServer PowerShell module
