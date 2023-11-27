@@ -1,5 +1,5 @@
 ![](./media/solutions-microsoft-logo-small.png)
-
+this is a test file from Microsoft
 # Azure Data SQL Samples Repository
 This GitHub repository contains code samples that demonstrate how to use Microsoft's Azure Data products including SQL Server, Azure SQL Database, Azure Synapse, and Azure SQL Edge. Each sample includes a README file that explains how to run and use the sample.
 
